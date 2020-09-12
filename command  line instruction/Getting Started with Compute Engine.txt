@@ -1,0 +1,56 @@
+Getting Started with Compute Engine
+
+Objective of this Lab
+In this lab, you will learn how to perform the following tasks:
+
+Create a Compute Engine virtual machine using the Google Cloud Platform (GCP) Console.
+
+Create a Compute Engine virtual machine using the gcloud command-line interface.
+
+Connect between the two instances.
+
+Task 1: Create an Instance my-vm-1
+gcloud compute instances create "my-vm-1" \
+--machine-type "n1-standard-1" \
+--image-project "debian-cloud" \
+--image "debian-9-stretch-v20190213" \
+--subnet "default"
+
+Task 2: Create an Instance my-vm-2 in another zone
+-see list of zones
+gcloud compute zones list | grep us-central1
+
+-Set default zone for instance
+gcloud config set compute/zone us-central1-b
+
+-create instance
+gcloud compute instances create "my-vm-2" \
+--machine-type "n1-standard-1" \
+--image-project "debian-cloud" \
+--image "debian-9-stretch-v20190213" \
+--subnet "default"
+
+Task 3: Ping my-vm-1 from my-vm-2 instance
+-Click SSH on my-vm-2 instance row and enter the command below
+ping my-vm-1
+
+-Open SSH on my-vm-1 instance from my-vm-2
+ssh my-vm-1
+***If you are prompted about whether you want to continue connecting to a host with unknown authenticity, enter yes to confirm that you do***
+
+Task 4: Install the NGinx web server on my-vm-1
+sudo apt-get install nginx-light -y
+
+-Use the nano text editor to add a custom message to the home page of the web server
+sudo nano /var/www/html/index.nginx-debian.html
+
+-Use the arrow keys to move the cursor to the line just below the h1 header. Add text like this, and replace YOUR_NAME with your name
+Hi from YOUR_NAME
+
+-Confirm that the web server is serving your new page. At the command prompt on my-vm-1, execute this command
+curl http://localhost/
+
+-To confirm that my-vm-2 can reach the web server on my-vm-1, at the command prompt on my-vm-2, execute this command
+curl http://my-vm-1/
+
+
